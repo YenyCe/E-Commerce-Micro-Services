@@ -1,0 +1,85 @@
+services:
+  # Servicio de base de datos PostgreSQL
+  postgresql:
+    container_name: ms_pg_sql             # Nombre del contenedor
+    image: postgres                       # Imagen oficial de PostgreSQL
+    environment:                          # Variables de entorno para inicializar la DB
+      POSTGRES_USER: yeny                # Usuario de la base de datos
+      POSTGRES_PASSWORD: yeny01          # Contraseña del usuario
+      PGDATA: /data/postgres             # Ruta interna donde se almacenarán los datos
+    volumes:
+      - postgres:/data/postgres          # Volumen para persistencia de datos
+    ports:
+      - "5432:5432"                      # Exposición del puerto de PostgreSQL
+    networks:
+      - microservices-net                # Conectado a la red de microservicios
+    restart: unless-stopped              # Se reinicia salvo que se detenga manualmente
+
+  # Interfaz gráfica para PostgreSQL (pgAdmin)
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4                # Imagen oficial de pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}  # Email de acceso
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}          # Contraseña
+      PGADMIN_CONFIG_SERVER_MODE: 'False'  # Modo sin servidor, ideal para desarrollo
+    volumes:
+      - pgadmin:/var/lib/pgadmin        # Volumen persistente para la configuración de pgAdmin
+    ports:
+      - "5050:80"                        # pgAdmin accesible en localhost:5050
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # Servicio de trazabilidad distribuida (Zipkin)
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin             # Imagen oficial de Zipkin
+    ports:
+      - "9411:9411"                      # Interfaz de Zipkin en localhost:9411
+    networks:
+      - microservices-net
+
+  # Base de datos NoSQL MongoDB
+  mongodb:
+    image: mongo
+    container_name: mongo_db
+    ports:
+      - 27017:27017                      # Puerto estándar de MongoDB
+    volumes:
+      - mongo:/data                      # Volumen persistente
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=yeny    # Usuario root de MongoDB
+      - MONGO_INITDB_ROOT_PASSWORD=yeny01  # Contraseña root
+
+  # Interfaz web para MongoDB (mongo-express)
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    restart: always
+    ports:
+      - 8081:8081                        # Accesible desde localhost:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=yeny
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=yeny01
+      - ME_CONFIG_MONGODB_SERVER=mongodb   # Nombre del servicio Mongo al que se conecta
+      - ME_CONFIG_BASICAUTH=false
+
+  # Simulador de servidor de correo electrónico (MailDev)
+  mail-dev:
+    container_name: ms-mail-dev
+    image: maildev/maildev              # Imagen oficial de MailDev
+    ports:
+      - 1080:1080                        # Interfaz web para ver correos simulados
+      - 1025:1025                        # Puerto SMTP para enviar correos desde la app
+
+# Red compartida entre los servicios
+networks:
+  microservices-net:
+    driver: bridge
+
+# Volúmenes persistentes para guardar datos incluso si los contenedores se detienen
+volumes:
+  postgres:      # Datos de PostgreSQL
+  pgadmin:       # Configuración de pgAdmin
+  mongo:         # Datos de MongoDB
