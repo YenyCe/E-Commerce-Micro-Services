@@ -14,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad que representa una línea dentro de un pedido (un producto comprado y su cantidad).
+ */
 @AllArgsConstructor
 @Builder
 @Getter
@@ -26,9 +29,10 @@ public class OrderLine {
     @Id
     @GeneratedValue
     private Integer id;
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne             // Relación muchos a uno con Order (muchas líneas a una orden)
+    @JoinColumn(name = "order_id") // Clave foránea en la tabla para la orden
     private Order order;
+    // Identificador del producto comprado (referencia al catálogo / product service).
     private Integer productId;
     private double quantity;
 }

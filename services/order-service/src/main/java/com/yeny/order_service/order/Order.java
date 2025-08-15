@@ -28,7 +28,7 @@ import com.yeny.order_service.orderline.OrderLine;
 @Getter
 @Setter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)// Escucha cambios para registrar fechas de creación/modificación
 @NoArgsConstructor
 @Table(name = "customer_order")
 public class Order {
@@ -45,11 +45,13 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private PaymentMethod paymentMethod;
 
+  // ID del cliente que hizo la orden
   private String customerId;
 
   @OneToMany(mappedBy = "order")
   private List<OrderLine> orderLines;
 
+    // Marca este campo para que Spring Data JPA lo rellene automáticamente al crear la entidad
   @CreatedDate
   @Column(updatable = false, nullable = false)
   private LocalDateTime createdDate;

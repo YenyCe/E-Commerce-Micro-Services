@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController // Marca esta clase como un controlador REST (devuelve JSON)
-@RequestMapping("/api/va/customer") // Prefijo para todas las rutas de esta clase
+@RequestMapping("/api/v1/customer") // Prefijo para todas las rutas de esta clase
 @RequiredArgsConstructor // Genera constructor para inyectar dependencias final
 public class CustomerController {
 

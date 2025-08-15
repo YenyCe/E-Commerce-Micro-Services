@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
 
+  // Inyección del servicio que contiene la lógica de negocio de las órdenes
   private final OrderService service;
 
+  
   @PostMapping
   public ResponseEntity<Integer> createOrder(@RequestBody @Valid OrderRequest request) {
     return ResponseEntity.ok(this.service.createOrder(request));

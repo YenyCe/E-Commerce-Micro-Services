@@ -16,6 +16,7 @@ public class OrderLineController {
 
     private final OrderLineService service;
 
+    // Endpoint GET para obtener todas las líneas de pedido de una orden
     @GetMapping("/order/{order-id}")
     public ResponseEntity<List<OrderLineResponse>> findByOrderId(
             @PathVariable("order-id") Integer orderId
