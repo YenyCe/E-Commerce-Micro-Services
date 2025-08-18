@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "eureka.instance.hostname",
+    "type": "java.lang.String",
+    "description": "Define el hostname de la instancia registrada en Eureka."
+  },
+  {
+    "name": "name.value",
+    "type": "java.lang.String",
+    "description": "Propiedad personalizada de ejemplo."
+  },
+  {
+    "name": "eureka.client.service-url.defaultZone",
+    "type": "java.lang.String",
+    "description": "A description for 'eureka.client.service-url.defaultZone'"
+  }
+]}
