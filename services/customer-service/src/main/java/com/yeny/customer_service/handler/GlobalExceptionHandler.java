@@ -23,9 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<String> handle(CustomerNotFoundException exp) {
         // Devuelve el mensaje de la excepción con código 404
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(exp.getMsg());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exp.getMsg());
     }
 
     /**

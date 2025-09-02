@@ -1,0 +1,178 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 120rem;
+    width: 90%;
+  margin: 0 auto;      /* Centra todo */
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Títulos */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espaciado entre filas */
+  margin-bottom: 30px;
+}
+
+/* Grid para inputs en 2 columnas */
+form .grid-2 {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los campos bajen a otra línea en pantallas pequeñas */
+  gap: 10px;
+}
+
+/* Inputs */
+form .grid-2 input {
+  flex: 1 1 400px; /* Ocupan mínimo 200px y se expanden */
+  min-width: 120px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* Botón del formulario */
+form button {
+  padding: 12px;
+  background: #377d38; /* Verde */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background: #45a049;
+}
+
+/*  Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow-x: auto; /* Scroll en móviles si no cabe */
+
+}
+
+table thead {
+  background: #f2f2f2;
+}
+
+table th, table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Botones dentro de la tabla */
+td button {
+  margin-right: 5px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  text-transform: uppercase;
+
+
+}
+
+td button:hover {
+  opacity: 0.8;
+}
+
+/* Botones por acción */
+button.edit {
+  background: #2196F3; /* Azul */
+  color: white;
+}
+
+button.delete {
+  background: #f44336; /* Rojo */
+  color: white;
+}
+
+/*  Ajustes responsivos */
+@media (max-width: 900px) {
+  form .grid-4 {
+    flex-direction: column; /* Inputs en columna en móviles */
+  }
+
+  form button {
+    width: 100%; /* Botón ocupa todo el ancho */
+    margin-top: 10px;
+  }
+
+  table {
+    font-size: 0.9rem; /* Texto un poco más pequeño en móviles */
+      display: block;
+  }
+
+  td button {
+    display: block;  /* Botones uno debajo del otro */
+    margin: 5px 0;
+    width: 100%;
+  }
+}
+
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* dos columnas */
+  gap: 1rem; /* separación entre campos */
+  
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+input, select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  margin-bottom: 0.3rem;
+}
+
+
+.search-btn {
+  padding: 10px 16px;
+  margin-left: 8px; /* espacio entre botones y input */
+  background-color: #4CAF50; /* verde */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+  background-color: #45a049; /* verde más oscuro al pasar el mouse */
+}

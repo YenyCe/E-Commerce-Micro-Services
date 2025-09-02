@@ -1,11 +1,13 @@
 package com.yeny.product_service.product;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yeny.product_service.category.Category;
+import com.yeny.product_service.category.CategoryRepository;
+import com.yeny.product_service.exception.ProductNotFoundException;
 import com.yeny.product_service.exception.ProductPurchaseException;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository repository; // Repositorio para operaciones CRUD en productos
-    private final ProductMapper mapper;  // Clase para mapear entre entidades y DTOs
+    private final ProductMapper mapper; // Clase para mapear entre entidades y DTOs
+    private final CategoryRepository categoryRepository;
 
     // Método para crear un producto a partir de un DTO de entrada
     public Integer createProduct(ProductRequest request) {
@@ -30,8 +33,11 @@ public class ProductService {
     public ProductResponse findById(Integer id) {
         return repository.findById(id)
                 .map(mapper::toProductResponse) // Si lo encuentra, lo convierte en ProductResponse
-                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID:: " + id));// Si no lo encuentra, lanza una excepción
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID:: " + id));// Si no lo
+                                                                                                     // encuentra, lanza
+                                                                                                     // una excepción
     }
+
     // Devuelve todos los productos registrados
     public List<ProductResponse> findAll() {
         return repository.findAll() // obtiene todos los productos
@@ -40,6 +46,34 @@ public class ProductService {
                 .collect(Collectors.toList()); // recolecta en una lista
     }
 
+    public ProductResponse updateProduct(Integer id, ProductRequest request) {
+        // Buscar producto existente
+        var product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Producto con id %s no encontrado".formatted(id)));
+
+        // Buscar la categoría asociada
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + request.categoryId()));
+        // Reemplazar TODOS los campos
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setAvailableQuantity(request.availableQuantity());
+        product.setPrice(request.price());
+        product.setCategory(category);
+
+        // Guardar y devolver un custommer mapper
+        var saved = repository.save(product);
+        return mapper.toProductResponse(saved);
+    }
+
+    public void deleteProduct(Integer id) {
+        Product existingProduct = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
+
+        repository.delete(existingProduct);
+    }
+
+        // +**************************************************************+
     // Método para realizar la compra de productos
     @Transactional(rollbackFor = ProductPurchaseException.class)
     public List<ProductPurchaseResponse> purchaseProducts(List<ProductPurchaseRequest> request) {
@@ -58,7 +92,8 @@ public class ProductService {
             throw new ProductPurchaseException("Uno o más productos no existen");
         }
 
-        // Ordena las solicitudes por ID para que coincidan con los productos recuperados
+        // Ordena las solicitudes por ID para que coincidan con los productos
+        // recuperados
         var sortedRequest = request
                 .stream()
                 .sorted(Comparator.comparing(ProductPurchaseRequest::productId))
@@ -74,7 +109,8 @@ public class ProductService {
 
             // Verifica si hay suficiente stock
             if (product.getAvailableQuantity() < productRequest.quantity()) {
-                throw new ProductPurchaseException("Insufficient stock quantity for product with ID:: " + productRequest.productId());
+                throw new ProductPurchaseException(
+                        "Insufficient stock quantity for product with ID:: " + productRequest.productId());
             }
 
             // Resta la cantidad comprada al stock disponible

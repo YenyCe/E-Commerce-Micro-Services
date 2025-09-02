@@ -2,7 +2,7 @@ package com.yeny.customer_service.customer;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-
+//DTO de entrada
 // record es una forma moderna de crear clases inmutables con getters automáticos
 public record CustomerRequest(
     String id,
